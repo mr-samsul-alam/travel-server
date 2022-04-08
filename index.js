@@ -15,8 +15,7 @@ app.use(express.json());
 //add User pass from dotenv
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.hiysg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-//check on cmd 
-// console.log(uri)
+//check on cmd  
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -83,43 +82,6 @@ async function run() {
         })
 
 
-
-        app.post('/products', async (req, res) => {
-            const product = req.body;
-            const result = await ProductsCollection.insertOne(product);
-            res.json(result)
-        })
-
-        app.post('/users', async (req, res) => {
-            const user = req.body;
-            const result = await usersCollection.insertOne(user);
-            console.log(result);
-            res.json(result);
-        });
-        app.post('/reviews', async (req, res) => {
-            const user = req.body;
-            const result = await reviewsCollection.insertOne(user);
-            console.log(result);
-            res.json(result);
-        });
-
-        app.put('/users', async (req, res) => {
-            const user = req.body;
-            const filter = { email: user.email };
-            const options = { upsert: true };
-            const updateDoc = { $set: user };
-            const result = await usersCollection.updateOne(filter, updateDoc, options);
-            res.json(result);
-        });
-        app.put('/users', async (req, res) => {
-            const user = req.body;
-            const filter = { email: user.email };
-            const options = { upsert: true };
-            const updateDoc = { $set: user };
-            const result = await usersCollection.updateOne(filter, updateDoc, options);
-            res.json(result);
-        });
-
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
@@ -134,15 +96,72 @@ async function run() {
             const result = await BookingsCollection.insertOne(bookingInfo);
             res.json(result)
         })
-        //Delete Data
-        app.delete("/bookingInfo/:id", async (req, res) => {
-            const id = req.params.id;
-            console.log(id);
-            const query = { _id: new ObjectId(id) };
-            // const deleteOrder = await BookingsCollection.deleteOne(query);
-            res.json(query);
+
+
+
+        app.post('/products', async (req, res) => {
+            const product = req.body;
+            const result = await ProductsCollection.insertOne(product);
+            res.json(result)
+        })
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result);
+        });
+        app.post('/reviews', async (req, res) => {
+            const user = req.body;
+            const result = await reviewsCollection.insertOne(user);
+            res.json(result);
         });
 
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
+        // update Order
+        app.put("/bookingInfo/:id", async (req, res) => {
+            const statusId = req.params.id;
+            const updateStatus = req.body;
+            console.log(statusId, updateStatus);
+
+            // const filter = { _id: ObjectId(statusId) };
+            // const option = { upsert: true };
+            // const updateOrder = {
+            //     $set: {
+            //         status: updateStatus.status,
+            //     },
+            // };
+            // const acceptStatus = await BookingsCollection.updateOne(
+            //     filter,
+            //     updateOrder,
+            //     option
+            // );
+            // console.log(acceptStatus);
+            // res.json(acceptStatus);
+        });
+        //Delete Data
+
+        // DELETE API
+        app.delete('/bookingInfo/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await BookingsCollection.deleteOne(query);
+            res.json(result);
+        })
 
     } finally {
         // await client.close();
